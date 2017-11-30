@@ -8,5 +8,5 @@ import { ProductService } from './products/product.service';
   providers: [ProductService]
 })
 export class AppComponent {
-  pageTitle = 'Bruno aprendiendo Angular';
+  pageTitle = 'House Truck';
 }
