@@ -9,12 +9,14 @@ import { RouterModule } from "@angular/router";
 import { ProductDetailGuard } from "./product-guard.service";
 import { ProductService } from "./product.service";
 import { SharedModule } from "../shared/shared.module";
+import { ConvertToSpacesPipe } from "../shared/convert-to-spaces.pipe";
 
 @NgModule({
     declarations: [
         ProductListComponent,
         ProductDetailComponent,
         ProductFilterPipe,
+        ConvertToSpacesPipe
     ],
     imports: [
        

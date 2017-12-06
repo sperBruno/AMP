@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { IProduct, Product } from "./product";
-import { Http, Response } from '@angular/http';
+
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
@@ -10,17 +11,14 @@ import 'rxjs/add/operator/catch';
 export class ProductService {
     private _productUrl = 'api/products/products.json'
 
-    constructor(private _http: Http){}
+    constructor(private _http: HttpClient){}
 
     getProducts(): Observable<IProduct[]> {
 
 
-        return this._http.get(this._productUrl)
-        .map((response: Response) => <IProduct[]> response.json())
-        .do(data => console.log("All "+ JSON.stringify(data)))
-        .catch(this.handleError);
-       //return newFunction();
-       // In need some more explanation on this
+        return this._http.get<IProduct[]>(this._productUrl)
+        .do(data => console.log('All: ' + JSON.stringify(data)))
+
     }
 
     getProduct(id: number): Observable<IProduct> {
@@ -28,8 +26,19 @@ export class ProductService {
             .map((products: IProduct[]) => products.find(p => p.productId === id));
     }
 
-    private handleError(error: Response){
-        console.error(error);
-        return Observable.throw(error.json().error || "Server Error");
+    private handleError(error: HttpErrorResponse){
+         // in a real world app, we may send the server to some remote logging infrastructure
+        // instead of just logging it to the console
+        let errorMessage = '';
+        if (error.error instanceof Error) {
+            // A client-side or network error occurred. Handle it accordingly.
+            errorMessage = `An error occurred: ${error.error.message}`;
+        } else {
+            // The backend returned an unsuccessful response code.
+            // The response body may contain clues as to what went wrong,
+            errorMessage = `Server returned code: ${error.status}, error message is: ${error.message}`;
+        }
+        console.error(errorMessage);
+        return Observable.throw(errorMessage);
     }
 }
